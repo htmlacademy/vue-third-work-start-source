@@ -1,7 +1,4 @@
-.DS_Store
+# IDE settings
 .idea
-.vscode
-node_modules
-npm-debug.log
-Thumbs.db
-todo.md
+.DS_Store
+*/.DS_Store
