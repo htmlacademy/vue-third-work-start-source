@@ -14,12 +14,7 @@
 <script setup>
 import DemoMenuCard from './DemoMenuCard.vue'
 
-const cards = [
-  {
-    name: 'Counter Base',
-    link: '/counter-0'
-  },
-]
+const cards = []
 </script>
 
 <style lang="scss" scoped>
