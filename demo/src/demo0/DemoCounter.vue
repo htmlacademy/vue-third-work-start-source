@@ -7,6 +7,7 @@
     <button> + </button>
   </div>
 </template>
+<<<<<<< HEAD
 
 <script>
 export default {
@@ -17,3 +18,5 @@ export default {
 <style scoped>
 
 </style>
+=======
+>>>>>>> 51aa7647fe482f2f3b932548a799e14769c086c6
