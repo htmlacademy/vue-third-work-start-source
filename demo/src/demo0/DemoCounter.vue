@@ -21,3 +21,26 @@ const increment = () => {
   count.value = count.value + 1
 }
 </script>
+
+<style lang="scss" scoped>
+.counter {
+  display: flex;
+  align-items: center;
+
+  button {
+    margin: 0 10px;
+    font-size: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: #d00;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      background: #f00;
+    }
+  }
+}
+</style>
