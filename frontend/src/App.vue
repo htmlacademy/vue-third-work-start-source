@@ -8,3 +8,7 @@
 import { AppLayout } from "@/layouts";
 import { HomeView } from "@/views";
 </script>
+
+<style lang="scss">
+@import "@/assets/scss/app.scss";
+</style>
