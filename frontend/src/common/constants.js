@@ -28,6 +28,5 @@ export const DAY_IN_SEC = HOUR_IN_SEC * 24;
 export const DAY_IN_MILLISEC = DAY_IN_SEC * SEC;
 
 export const TAG_SEPARATOR = '#';
-
 export const MOVE = 'move';
 export const DATA_TRANSFER_PAYLOAD = 'payload';
