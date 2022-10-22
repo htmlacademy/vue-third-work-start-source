@@ -4,11 +4,14 @@
       :filters="state.filters"
       @update-tasks="updateTasks"
   >
-    <home-view
+    <router-view
         :tasks="filteredTasks"
         :filters="state.filters"
         @update-tasks="updateTasks"
         @apply-filters="applyFilters"
+        @add-task="addTask"
+        @edit-task="editTask"
+        @delete-task="deleteTask"
     />
   </app-layout>
 </template>
@@ -16,9 +19,9 @@
 <script setup>
 import { reactive, computed } from 'vue'
 import { AppLayout } from '@/layouts'
-import { HomeView } from '@/views'
 import { normalizeTask } from './common/helpers'
 import tasks from './mocks/tasks.json'
+import users from './mocks/users.json'
 
 const state = reactive({
   tasks: tasks.map(task => normalizeTask(task)),
@@ -77,6 +80,7 @@ function updateTasks (tasksToUpdate) {
 }
 
 function applyFilters ({ item, entity }) {
+  console.log(item, entity)
   if (!Array.isArray(state.filters[entity])) {
     state.filters[entity] = item
   } else {
@@ -87,6 +91,43 @@ function applyFilters ({ item, entity }) {
         : resultValues.push(item)
     state.filters[entity] = resultValues
   }
+}
+
+function getTaskUserById (id) {
+  return users.find(user => user.id === id)
+}
+
+// Создаем новую задачу и добавляем в массив задач
+function addTask (task) {
+  // Нормализуем задачу
+  const newTask = normalizeTask(task)
+  // Добавляем идентификатор, последний элемент в списке задач
+  // После подключения сервера идентификатор будет присваиваться сервером
+  newTask.id = state.tasks.length + 1
+  // Добавляем задачу в конец списка задач в беклоге
+  newTask.sortOrder = state.tasks.filter(task => !task.columnId).length
+  // Если задаче присвоен исполнитель, то добавляем объект юзера в задачу
+  // Это будет добавлено сервером позже
+  if (newTask.userId) {
+    newTask.user = { ...getTaskUserById(newTask.userId) }
+  }
+  // Добавляем задачу в массив
+  state.tasks = [...state.tasks, newTask]
+}
+
+function editTask (task) {
+  const index = state.tasks.findIndex(({ id }) => task.id === id)
+  if (~index) {
+    const newTask = normalizeTask(task)
+    if (newTask.userId) {
+      newTask.user = { ...getTaskUserById(newTask.userId) }
+    }
+    state.tasks.splice(index, 1, newTask)
+  }
+}
+
+function deleteTask (id) {
+  state.tasks = state.tasks.filter(task => task.id !== id)
 }
 </script>
 

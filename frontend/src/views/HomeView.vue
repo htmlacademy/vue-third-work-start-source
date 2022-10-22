@@ -1,6 +1,13 @@
 <template>
   <main class="content">
     <section class="desk">
+      <!--      Отображение дочерних маршрутов-->
+      <router-view
+          :tasks="props.tasks"
+          @add-task="$emit('addTask', $event)"
+          @edit-task="$emit('editTask', $event)"
+          @delete-task="$emit('deleteTask', $event)"
+      />
       <!--      Шапка доски-->
       <div class="desk__header">
         <h1 class="desk__title">Design Coffee Lab</h1>
@@ -21,6 +28,11 @@
                   :key="user.id"
                   :title="user.name"
                   class="user-filter__item"
+                  :class="{ active: filters.users.some(id => id === user.id) }"
+                  @click="$emit(
+                    'applyFilters',
+                    { item: user.id, entity: 'users' }
+                  )"
               >
                 <a class="user-filter__button">
                   <img
@@ -114,7 +126,7 @@ function updateColumn (column) {
 }
 
 function deleteColumn (id) {
-  state.columns = state.columns.filter(column => column.id !== id);
+  state.columns = state.columns.filter(column => column.id !== id)
 }
 </script>
 

@@ -13,7 +13,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getTagsArrayFromString } from '../../../common/helpers'
+import { getTagsArrayFromString } from '@/common/helpers'
 
 const props = defineProps({
   tags: {
