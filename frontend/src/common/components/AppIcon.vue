@@ -1,7 +1,7 @@
 <template>
   <button
-      class="column__button column__update icon"
-      type="button"
+    class="column__button column__update icon"
+    type="button"
   />
 </template>
 

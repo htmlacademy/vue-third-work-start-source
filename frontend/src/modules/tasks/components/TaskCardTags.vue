@@ -1,8 +1,8 @@
 <template>
   <ul class="task__tags">
     <li
-        v-for="(tag, index) in tagsArray"
-        :key="index"
+      v-for="(tag, index) in tagsArray"
+      :key="index"
     >
       <span class="task__tag">
         {{ tag }}
@@ -16,10 +16,10 @@ import { computed } from 'vue'
 import { getTagsArrayFromString } from '@/common/helpers'
 
 const props = defineProps({
-  tags: {
-    type: String,
-    required: true
-  }
+    tags: {
+      type: String,
+      required: true
+    }
 })
 
 const tagsArray = computed(() => {

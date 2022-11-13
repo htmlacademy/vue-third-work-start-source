@@ -1,16 +1,16 @@
 <template>
-  <!--  Отслеживает в какую колонку передана задача-->
+<!--  Отслеживает в какую колонку передана задача-->
   <app-drop
       class="column"
       @drop="moveTask"
   >
     <h2 class="column__name">
-      <!--      Показывает наименование колонки-->
+<!--      Показывает наименование колонки-->
       <span v-if="!state.isInputShowed">
         {{ state.columnTitle }}
       </span>
 
-      <!--      Показывает инпут если колонка редактируется-->
+<!--      Показывает инпут если колонка редактируется-->
       <input
           v-else
           ref="columnTitle"
@@ -21,14 +21,14 @@
           @blur="updateInput"
       />
 
-      <!--      Показывает иконку редактирования задачи-->
+<!--      Показывает иконку редактирования задачи-->
       <app-icon
           v-if="!state.isInputShowed"
           class="icon--edit"
           @click="showInput"
       />
-      <!--      Показывает иконку удаления колонки-->
-      <!--      Иконка не будет отображаться если в колонке есть задачи-->
+<!--      Показывает иконку удаления колонки-->
+<!--      Иконка не будет отображаться если в колонке есть задачи-->
       <app-icon
           v-if="!state.isInputShowed && !columnTasks.length"
           class="icon--trash"
@@ -37,7 +37,7 @@
     </h2>
 
     <div class="column__target-area">
-      <!--      Вынесли задачи в отдельный компонент-->
+<!--      Вынесли задачи в отдельный компонент-->
       <task-card
           v-for="task in columnTasks"
           :key="task.id"
@@ -55,26 +55,25 @@ import AppDrop from '@/common/components/AppDrop.vue'
 import AppIcon from '@/common/components/AppIcon.vue'
 import TaskCard from '@/modules/tasks/components/TaskCard.vue'
 import { getTargetColumnTasks, addActive } from '@/common/helpers'
+import { useTasksStore } from '@/stores'
+
+const tasksStore = useTasksStore()
 
 const props = defineProps({
   column: {
     type: Object,
     required: true
-  },
-  tasks: {
-    type: Array,
-    required: true
-  },
+  }
 })
 const columnTitle = ref(null)
 const state = reactive({ isInputShowed: false, columnTitle: props.column.title })
-const emits = defineEmits(['update', 'delete', 'updateTasks'])
+const emits = defineEmits(['update', 'delete'])
 
 // Фильтруем задачи, которые относятся к конкретной колонке
 const columnTasks = computed(() => {
-  return props.tasks
-      .filter(task => task.columnId === props.column.id)
-      .sort((a, b) => a.sortOrder - b.sortOrder)
+  return tasksStore.filteredTasks
+    .filter(task => task.columnId === props.column.id)
+    .sort((a, b) => a.sortOrder - b.sortOrder)
 })
 
 // Показывает инпут для редактирования колонки и наводим фокус
@@ -106,7 +105,7 @@ function moveTask (active, toTask) {
 
   const toColumnId = props.column ? props.column.id : null
   // Получить задачи для текущей колонки
-  const targetColumnTasks = getTargetColumnTasks(toColumnId, props.tasks)
+  const targetColumnTasks = getTargetColumnTasks(toColumnId, tasksStore.tasks)
   const activeClone = { ...active, columnId: toColumnId }
   // Добавить активную задачу в колонку
   const resultTasks = addActive(activeClone, toTask, targetColumnTasks)
@@ -119,7 +118,7 @@ function moveTask (active, toTask) {
       tasksToUpdate.push(newTask)
     }
   })
-  emits('updateTasks', tasksToUpdate)
+  tasksStore.updateTasks(tasksToUpdate)
 }
 </script>
 

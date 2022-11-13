@@ -14,7 +14,7 @@ const layout = shallowRef(null)
 
 // Наблюдаем за изменением маршрута
 watch(
-    () => route.meta,
+  () => route.meta,
     async meta => {
       try {
         // Пробуем найти компонент из свойства meta и динамически импортировать его

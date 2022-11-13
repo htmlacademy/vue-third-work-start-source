@@ -10,7 +10,7 @@
 
 <script setup>
 import { ref } from "vue";
-import DemoContainer from '../components/DemoContainer.vue'
+import DemoContainer from '../components/DemoContainer.vue';
 
 const count = ref(0);
 

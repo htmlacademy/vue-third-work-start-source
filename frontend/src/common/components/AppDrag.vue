@@ -1,9 +1,9 @@
 <template>
   <div
-      :draggable="true"
-      @dragstart.self="onDrag"
-      @dragover.prevent
-      @dragenter.prevent
+    :draggable="true"
+    @dragstart.self="onDrag"
+    @dragover.prevent
+    @dragenter.prevent
   >
     <slot />
   </div>
@@ -23,8 +23,8 @@ function onDrag({ dataTransfer }) {
   dataTransfer.effectAllowed = MOVE;
   dataTransfer.dropEffect = MOVE;
   dataTransfer.setData(
-      DATA_TRANSFER_PAYLOAD,
-      JSON.stringify(props.transferData)
+    DATA_TRANSFER_PAYLOAD,
+    JSON.stringify(props.transferData)
   );
 }
 </script>
