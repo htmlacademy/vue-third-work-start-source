@@ -1,5 +1,1 @@
-{
-  "template": {
-    "id": "html-academy-vue3-vue-work"
-  }
-}
+{"templateId":"html-academy-vue3-vue-work","jest":true,"devPort":8080}
