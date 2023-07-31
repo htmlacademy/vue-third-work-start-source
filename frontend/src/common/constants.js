@@ -1,24 +1,24 @@
 export const STATUSES = [
   {
-    label: 'Важно, не срочно',
-    value: 'green'
+    label: "Важно, не срочно",
+    value: "green",
   },
   {
-    label: 'Срочно, не важно',
-    value: 'orange'
+    label: "Срочно, не важно",
+    value: "orange",
   },
   {
-    label: 'Срочно, важно',
-    value: 'red'
+    label: "Срочно, важно",
+    value: "red",
   },
   {
-    label: 'Дедлайн',
-    value: 'time'
+    label: "Дедлайн",
+    value: "time",
   },
   {
-    label: 'Просрочено',
-    value: 'alert'
-  }
+    label: "Просрочено",
+    value: "alert",
+  },
 ];
 
 export const SEC = 1000;
@@ -29,4 +29,4 @@ export const MONTH_IN_SEC = DAY_IN_SEC * 30;
 export const YEAR_IN_SEC = DAY_IN_SEC * 365;
 export const DAY_IN_MILLISEC = DAY_IN_SEC * SEC;
 
-export const TAG_SEPARATOR = '#';
+export const TAG_SEPARATOR = "#";
