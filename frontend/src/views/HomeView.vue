@@ -50,12 +50,12 @@
           <h2 class="column__name">{{ title }}</h2>
           <div class="column__target-area">
 
-            <div class="column__task">
-              <div
-                v-for="task in columnTasks[id]"
-                :key="task.id"
-                class="task"
-              >
+            <div
+              v-for="task in columnTasks[id]"
+              :key="task.id"
+              class="column__task"
+            >
+              <div class="task">
                 <div class="task__user">
                   <div class="task__avatar">
                     <img
