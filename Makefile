@@ -36,3 +36,7 @@ install_template_dependencies:
 	npm ci
 
 install_dependencies: install_backend_dependencies install_frontend_dependencies install_template_dependencies
+
+format_frontend:
+	cd frontend && \
+	npm run format
