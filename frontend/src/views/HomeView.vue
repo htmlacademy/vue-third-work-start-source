@@ -5,17 +5,18 @@
         <h1 class="desk__title">Design Coffee Lab</h1>
         <div class="desk__filters">
           <div class="desk__user-filter">
+            <!--           Список пользователей-->
             <ul class="user-filter">
               <li
-                v-for="user of users"
+                v-for="user in users"
                 :key="user.id"
-                :title="user.name"
                 class="user-filter__item"
               >
                 <a class="user-filter__button">
                   <img
                     :src="getImage(user.avatar)"
-                    :alt="`аватар ${user.name}`"
+                    :title="user.name"
+                    alt="Аватар юзера"
                     width="24"
                     height="24"
                   />
@@ -23,17 +24,17 @@
               </li>
             </ul>
           </div>
-
           <div class="desk__meta-filter">
+            <!--            Список статусов-->
             <ul class="meta-filter">
               <li
-                v-for="{ value, label } in STATUSES"
+                v-for="{ value, key } in STATUSES"
                 :key="value"
                 class="meta-filter__item"
               >
                 <a
-                  :title="label"
                   :class="`meta-filter__status meta-filter__status--color meta-filter__status--${value}`"
+                  :title="key"
                 />
               </li>
             </ul>
@@ -41,22 +42,15 @@
         </div>
       </div>
 
+      <!--      Колонки и задачи-->
       <div v-if="columns.length" class="desk__columns">
-        <div
-          v-for="{ title, id } in columns"
-          :key="id"
-          class="column"
-        >
-          <h2 class="column__name">{{ title }}</h2>
+        <div v-for="column in columns" :key="column.id" class="column">
+          <h2 class="column__name">{{ column.title }}</h2>
           <div class="column__target-area">
-
-            <div
-              v-for="task in columnTasks[id]"
-              :key="task.id"
-              class="column__task"
-            >
+            <!--            Задачи-->
+            <div v-for="task in columnTasks[column.id]" class="column__task">
               <div class="task">
-                <div class="task__user">
+                <div v-if="task.user" class="task__user">
                   <div class="task__avatar">
                     <img
                       :src="getImage(task.user.avatar)"
@@ -71,8 +65,9 @@
                 <div class="task__statuses">
                   <span
                     v-if="task.status"
-                    :class="`task__status task__status--color task__status--${task.status}`"
+                    :class="`task__status task__status--${task.status}`"
                   />
+
                   <span
                     v-if="task.timeStatus"
                     :class="`task__status task__status--${task.timeStatus}`"
@@ -80,14 +75,17 @@
                 </div>
 
                 <h5
-                  class="task__title"
-                  :class="{ 'task__title--first': !task.user }"
+                  :class="{
+                    task__title: true,
+                    'task__title--first': !task.user,
+                  }"
                 >
                   {{ task.title }}
                 </h5>
-                <ul v-if="task.tags?.length" class="task__tags">
+
+                <ul v-if="task.tags && task.tags.length" class="task__tags">
                   <li v-for="(tag, index) in task.tags" :key="index">
-                    <span class="tag tag--blue">{{ tag }}</span>
+                    <span class="tag tag--blue"> {{ tag }} </span>
                   </li>
                 </ul>
               </div>
@@ -96,40 +94,48 @@
         </div>
       </div>
 
+      <!--      Пустая доска-->
       <p v-else class="desk__emptiness">Пока нет ни одной колонки</p>
     </section>
   </main>
 </template>
 
 <script setup>
-import columns from "@/mocks/columns.json";
 import users from "@/mocks/users.json";
+import columns from "@/mocks/columns.json";
 import tasks from "@/mocks/tasks.json";
 import { STATUSES } from "@/common/constants";
 import { normalizeTask, getTagsArrayFromString } from "@/common/helpers";
 
-const normalizedTasks = tasks.map((item) => normalizeTask(item));
-const columnTasks = normalizedTasks.reduce((acc, item) => {
-  if (!item.columnId) return acc;
+const normalizedTasks = tasks.map((task) => normalizeTask(task));
+const columnTasks = normalizedTasks.reduce((accumulator, task) => {
+  const taskColumnId = task.columnId;
+  if (!taskColumnId) return accumulator;
 
-  item.tags = getTagsArrayFromString(item.tags);
-  if (!acc[item.columnId]) {
-    acc[item.columnId] = [];
+  task.tags = getTagsArrayFromString(task.tags);
+
+  if (accumulator[taskColumnId]) {
+    accumulator[taskColumnId].push(task);
+  } else {
+    accumulator[taskColumnId] = [task];
   }
-  acc[item.columnId].push(item);
-  return acc;
+
+  return accumulator;
 }, {});
 
-const getImage = (image) => {
-  return new URL(`../assets/img/${image}`, import.meta.url).href;
-};
+const getImage = (image) =>
+  new URL(`../assets/img/${image}`, import.meta.url).href;
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
 
 .content {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -348,7 +354,7 @@ const getImage = (image) => {
 }
 
 .column {
-  $bl: ".column";
+  $bl: &;
 
   display: flex;
   flex-direction: column;
