@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="cards">
       <demo-menu-card
-        v-for="({ name, text, path }, index) in routes"
+        v-for="({ name, text, path }, index) in router.routes"
         :key="index"
         :name="name"
         :text="text"
