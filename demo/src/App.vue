@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <demo-container>
+    <router-view/>
+  </demo-container>
 </template>
 
 <style>
@@ -9,3 +11,6 @@
   font-family: sans-serif;
 }
 </style>
+<script setup lang="ts">
+import DemoContainer from "./components/DemoContainer.vue";
+</script>
