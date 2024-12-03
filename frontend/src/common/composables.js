@@ -3,6 +3,7 @@ import { getTimeAgo } from "./helpers";
 
 export const useTaskCardDate = (task) => {
   return computed(() => {
-    return `# ${task.id} создана ${getTimeAgo(task.dueDate)}`;
+    if (!task || !task?.id || !task?.dueDate) return "";
+    return `# ${task?.id} создана ${getTimeAgo(task?.dueDate)}`;
   });
 };

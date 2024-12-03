@@ -45,7 +45,10 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import users from "@/mocks/users.json";
-import { validateFields, clearValidationErrors } from "@/common/validator";
+import {
+  validateFields,
+  clearValidationErrors,
+} from "../../../common/validator";
 import AppTextarea from "@/common/components/AppTextarea.vue";
 import AppButton from "@/common/components/AppButton.vue";
 import { getImage } from "@/common/helpers";

@@ -132,7 +132,7 @@ const task = computed(() => {
 });
 
 const dueDate = computed(() => {
-  return getReadableDate(task.value.dueDate || "");
+  return getReadableDate(task.value?.dueDate || "");
 });
 
 const closeDialog = function () {

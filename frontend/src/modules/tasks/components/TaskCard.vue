@@ -4,7 +4,7 @@
     <!--      Компонент AppDrag определяет какая задача перемещается -->
     <app-drag :transfer-data="task">
       <div class="task" @click="router.push({ path: `/${task.id}` })">
-        <!--        Этот блок показывает пользователя, который работает над задачей-->
+        <!--        Данный блок показывает пользователя, который работает над задачей-->
         <div v-if="task.user" class="task__user">
           <div class="task__avatar">
             <img
@@ -16,7 +16,7 @@
           </div>
           {{ task.user.name }}
         </div>
-        <!--        Этот блок показывает статусы задачи-->
+        <!--        Данный блок показавает статусы задачи-->
         <div class="task__statuses">
           <span
             v-if="task.status"
@@ -41,6 +41,7 @@
     </app-drag>
   </app-drop>
 </template>
+
 <script setup>
 import AppDrag from "@/common/components/AppDrag.vue";
 import AppDrop from "@/common/components/AppDrop.vue";
@@ -57,8 +58,9 @@ const props = defineProps({
   },
 });
 
-defineEmits(["drop"]);
+defineEmits(["drop", "click"]);
 </script>
+
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
 
