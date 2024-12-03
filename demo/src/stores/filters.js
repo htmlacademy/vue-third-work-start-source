@@ -6,6 +6,15 @@ export const useFiltersStore = defineStore('filters', {
         users: [],
         statuses: []
     }),
-    getters: {},
+    getters: {
+        filters: state => {
+            const { search, users, statuses } = state
+            return {
+                search,
+                users,
+                statuses
+            }
+        }
+    },
     actions: {},
 })
