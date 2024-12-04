@@ -1,5 +1,5 @@
 <template>
-  <!--  Отслеживает, в какую колонку передана задача-->
+  <!--  Отслеживает в какую колонку передана задача-->
   <app-drop class="column" @drop="moveTask">
     <h2 class="column__name">
       <!--      Показывает наименование колонки-->
@@ -7,7 +7,7 @@
         {{ state.columnTitle }}
       </span>
 
-      <!--      Показывает инпут, если колонка редактируется-->
+      <!--      Показывает инпут если колонка редактируется-->
       <input
         v-else
         ref="columnTitle"
@@ -25,7 +25,7 @@
         @click="showInput"
       />
       <!--      Показывает иконку удаления колонки-->
-      <!--      Иконка не будет отображаться, если в колонке есть задачи-->
+      <!--      Иконка не будет отображаться если в колонке есть задачи-->
       <app-icon
         v-if="!state.isInputShowed && !columnTasks.length"
         class="icon--trash"
@@ -45,20 +45,20 @@
     </div>
   </app-drop>
 </template>
+
 <script setup>
 import { reactive, computed, nextTick, ref } from "vue";
 import AppDrop from "@/common/components/AppDrop.vue";
 import AppIcon from "@/common/components/AppIcon.vue";
 import TaskCard from "@/modules/tasks/components/TaskCard.vue";
 import { getTargetColumnTasks, addActive } from "@/common/helpers";
+import { useTasksStore } from "@/stores";
+
+const tasksStore = useTasksStore();
 
 const props = defineProps({
   column: {
     type: Object,
-    required: true,
-  },
-  tasks: {
-    type: Array,
     required: true,
   },
 });
@@ -67,20 +67,20 @@ const state = reactive({
   isInputShowed: false,
   columnTitle: props.column.title,
 });
-const emits = defineEmits(["update", "delete", "updateTasks"]);
+const emits = defineEmits(["update", "delete"]);
 
 // Фильтруем задачи, которые относятся к конкретной колонке
 const columnTasks = computed(() => {
-  return props.tasks
+  return tasksStore.filteredTasks
     .filter((task) => task.columnId === props.column.id)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 });
 
-// Показывает инпут для редактирования колонки и наводит фокус
+// Показывает инпут для редактирования колонки и наводим фокус
 async function showInput() {
   state.isInputShowed = true;
-  // Функция nextTick ожидает, когда произойдёт ререндеринг компонента
-  // Так как мы изменили span на input, нужно подождать, когда отрисуется инпут
+  // Функция nextTick ожидает когда произойдет ререндер компонента
+  // Так как мы изменили span ни input, нам нужно подождать когда отрисуется инпут
   await nextTick();
   columnTitle.value.focus();
 }
@@ -98,14 +98,14 @@ function updateInput() {
 
 // Метод для переноса задач
 function moveTask(active, toTask) {
-  // Не обновлять, если нет изменений
+  // Не обновлять если нет изменений
   if (toTask && active.id === toTask.id) {
     return;
   }
 
   const toColumnId = props.column ? props.column.id : null;
   // Получить задачи для текущей колонки
-  const targetColumnTasks = getTargetColumnTasks(toColumnId, props.tasks);
+  const targetColumnTasks = getTargetColumnTasks(toColumnId, tasksStore.tasks);
   const activeClone = { ...active, columnId: toColumnId };
   // Добавить активную задачу в колонку
   const resultTasks = addActive(activeClone, toTask, targetColumnTasks);
@@ -118,9 +118,10 @@ function moveTask(active, toTask) {
       tasksToUpdate.push(newTask);
     }
   });
-  emits("updateTasks", tasksToUpdate);
+  tasksStore.updateTasks(tasksToUpdate);
 }
 </script>
+
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";
 .column {

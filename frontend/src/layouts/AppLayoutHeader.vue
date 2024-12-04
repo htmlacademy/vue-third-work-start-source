@@ -1,5 +1,6 @@
 <template>
   <header class="header">
+    <!--    Логотип-->
     <div class="header__logo">
       <router-link to="/" class="logo">
         <img
@@ -10,16 +11,27 @@
         />
       </router-link>
     </div>
-
+    <!--    Поиск-->
     <form action="#" class="header__search">
-      <input type="search" name="search" required placeholder="Поиск" />
+      <input
+        type="search"
+        name="search"
+        required
+        placeholder="Поиск"
+        @input="
+          filtersStore.applyFilters({
+            item: $event.target.value,
+            entity: 'search',
+          })
+        "
+      />
       <button type="submit">Найти</button>
     </form>
-
+    <!--    Кнопка создания новой задачи-->
     <router-link to="/tasks/create" class="header__create-task"
       >Создать карточку</router-link
     >
-
+    <!--    Аватар пользователя-->
     <a href="#" class="header__user">
       <img
         src="@/assets/img/admin.jpg"
@@ -28,7 +40,7 @@
         height="40"
       />
     </a>
-
+    <!--    Панель пользователя-->
     <div class="header__menu">
       <div class="user-menu">
         <img
@@ -44,6 +56,12 @@
     </div>
   </header>
 </template>
+
+<script setup>
+import { useFiltersStore } from "@/stores";
+
+const filtersStore = useFiltersStore();
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/ds-system/ds-system";
