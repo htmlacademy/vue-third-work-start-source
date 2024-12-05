@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useUsersStore, useFiltersStore } from "@/stores";
+import { useUsersStore, useFiltersStore, useTicksStore } from "@/stores";
 import { tasksService } from "@/services";
 
 export const useTasksStore = defineStore("tasks", {
@@ -15,7 +15,7 @@ export const useTasksStore = defineStore("tasks", {
       );
 
       if (filtersAreEmpty) {
-        // Вернуть все задачи, если фильтры не применены
+        // Вернуть все задачи если фильтры не применены
         return state.tasks;
       }
 
@@ -48,11 +48,22 @@ export const useTasksStore = defineStore("tasks", {
         );
       });
     },
+    getTaskById: (state) => (id) => {
+      const ticksStore = useTicksStore();
+      const usersStore = useUsersStore();
+      const task = state.tasks.find((task) => task.id == id);
+      if (!task) return null;
+      // Добавляем подзадачи
+      task.ticks = ticksStore.getTicksByTaskId(task.id);
+      // Добавляем пользователя
+      task.user = usersStore.users.find((user) => user.id === task.userId);
+      return task;
+    },
     getTaskUserById: () => (id) => {
       const usersStore = useUsersStore();
       return usersStore.users.find((user) => user.id === id);
     },
-    // Фильтруем задачи, которые относятся к бэклогу (columnId === null)
+    // Фильтруем задачи, которые относятся к беклогу (columnId === null)
     sidebarTasks: (state) => {
       return state.filteredTasks
         .filter((task) => !task.columnId)
@@ -61,15 +72,15 @@ export const useTasksStore = defineStore("tasks", {
   },
   actions: {
     async fetchTasks() {
-      // Получение данных из JSON-файла заменим в следующих разделах
+      // Получение данных из json файла будет заменено в последующих разделах
       this.tasks = await tasksService.fetchTasks();
     },
     updateTasks(tasksToUpdate) {
       tasksToUpdate.forEach(async (task) => {
         const index = this.tasks.findIndex(({ id }) => id === task.id);
-        // findIndex вернёт элемент массива или -1
-        // Используем bitwise not для определения, если index === -1
-        // ~-1 вернёт 0, а значит false
+        // findIndex вернет элемент массива или -1
+        // Используем bitwise not для определения если index === -1
+        // ~-1 вернет 0, а значит false
         if (~index) {
           // Обновить порядок сортировки на сервере
           await tasksService.updateTask(task);
@@ -78,7 +89,7 @@ export const useTasksStore = defineStore("tasks", {
       });
     },
     async addTask(task) {
-      // Добавляем задачу в конец списка задач в бэклоге
+      // Добавляем задачу в конец списка задач в беклоге
       task.sortOrder = this.tasks.filter((task) => !task.columnId).length;
       const newTask = await tasksService.createTask(task);
       // Добавляем задачу в массив

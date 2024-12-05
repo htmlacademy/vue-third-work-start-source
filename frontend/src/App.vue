@@ -11,6 +11,7 @@ import {
   useColumnsStore,
   useUsersStore,
   useCommentsStore,
+  useTicksStore,
 } from "./stores";
 
 // Определяем хранилища
@@ -18,6 +19,7 @@ const tasksStore = useTasksStore();
 const usersStore = useUsersStore();
 const columnsStore = useColumnsStore();
 const commentsStore = useCommentsStore();
+const ticksStore = useTicksStore();
 
 // Загрузка первоначальных данных
 // Загружаем задачи
@@ -28,6 +30,8 @@ void usersStore.fetchUsers();
 void columnsStore.fetchColumns();
 // Загружаем комментарии
 void commentsStore.fetchComments();
+// Загружаем подзадачи
+void ticksStore.fetchTicks();
 </script>
 
 <style lang="scss">
